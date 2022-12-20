@@ -16,12 +16,6 @@ class Fleet {
         void GetFleetStats();
         bool CarExists(std::string vin);
       
-
-
-
-
-
-        
     private:
         
         

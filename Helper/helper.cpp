@@ -20,14 +20,12 @@ void mainFunctionCaller(int userChoice, Fleet& fleet){
 
                 Car newCar = addCarHelper(vin);
                 fleet.AddCarToFleet(newCar);
-                fleet.ListCarsInFleet();
                 break;
             }   
             case 2:
             {
                 std::string vin = vinRetriever("Remove");
                 fleet.RemoveCarFromFleet(vin);
-                fleet.ListCarsInFleet();
                 break;
             }
                 
@@ -36,7 +34,6 @@ void mainFunctionCaller(int userChoice, Fleet& fleet){
                 std::string vin = vinRetriever("Edit");
                 Car& CarToEdit = fleet.GetCarByVIN(vin);
                 CarToEdit.EditCarDetails();
-                fleet.ListCarsInFleet();
                 break;
             }
             case 4:
@@ -48,7 +45,6 @@ void mainFunctionCaller(int userChoice, Fleet& fleet){
                 fleet.GetCarDetails(vin);
                 break;
             }
-               
             case 6:
                 fleet.GetFleetStats();
                 break;
@@ -63,9 +59,8 @@ void mainFunctionCaller(int userChoice, Fleet& fleet){
 
 
 
-// This will prompt and then take inputs and then return the Car
 Car addCarHelper(std::string vin){
-    std::vector<std::string> attributePrompts = {"Year", "Make", "Model", "City Miles Per Gallon", "Highway Miles Per Gallon", "Original Purchase Price", "Current Market Value"};
+    std::vector<std::string> attributePrompts = {"Year", "Make", "Model", "Mileage", "City Miles Per Gallon", "Highway Miles Per Gallon", "Original Purchase Price", "Current Market Value"};
 
     Car newCar;
     newCar.setVIN(vin);
@@ -81,9 +76,9 @@ Car addCarHelper(std::string vin){
             newCar[currIdx] = "None";
             std::cin.clear();
         } else {
-            if(currIdx == 6) {
+            if(currIdx == 7) {
                 newCar.setPurchasePrice(input);
-            } else if(currIdx == 7) {
+            } else if(currIdx == 8) {
                 newCar.setCurrentValue(input);
             } else {
                 uppercaseInput(input);
@@ -97,9 +92,6 @@ Car addCarHelper(std::string vin){
 
 
 
-
-
-
 std::string vinRetriever(std::string action) {
     std::cout << "Enter the VIN number of the car you would like to " << action <<": ";;
     std::string input;
@@ -110,7 +102,6 @@ std::string vinRetriever(std::string action) {
 
 void uppercaseInput(std::string& carInput) {
     transform(carInput.begin(), carInput.end(), carInput.begin(), ::toupper);
- 
 };
 
 

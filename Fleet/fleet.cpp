@@ -14,10 +14,39 @@ void Fleet::AddCarToFleet(Car& newCar){
 };
 
 void Fleet::RemoveCarFromFleet(std::string vin){
-    if(CarExists(vin)) {
-        _fleet.erase(vin);
-    } else {
+    if(!CarExists(vin)) {
         std::cout << "Vehicle does not exist with that VIN number" << "\n";
+
+    } else {
+
+        Car& car = _fleet.at(vin);
+        
+
+        std::cout << "\nYou want to remove the following car: " << car.year << " " << car.make << " " << car.model <<'\n';
+
+        std::string removeCmd;
+
+        while(true) {
+            std::cout << "Do you want to remove this vehicle to your fleet? (yes/no)" << '\n';
+            std::getline(std::cin, removeCmd);
+
+
+            if(removeCmd == "yes") {
+                std::cout << "\nCar has been removed from your fleet" << '\n';
+                _fleet.erase(vin);
+
+                break;
+            }else if (removeCmd == "no") {
+                std::cout << "Going back to main menu" << '\n';
+                break;
+
+            } else {
+                std::cin.clear();
+                continue;
+            }
+
+        }
+
     }
 };
 
@@ -26,14 +55,11 @@ void Fleet::ListCarsInFleet(){
     if(_fleet.size() == 0) {
         std::cout << "Fleet Is Empty" << "\n";
     } else {
-        for (auto& car : _fleet) {
-        std::cout << count << " : " << car.second.getVIN() << " " << car.second.year << " " << car.second.make << " " << car.second.model << " " << car.second.cityMPG << " " << car.second.highwayMPG << " " << car.second.getPurchasePrice() << " " << car.second.getCurrentValue() << '\n';
+        std::cout << "\n____Cars in Your Fleet____\n";
+        for (auto& [vin, car] : _fleet) {
+        std::cout << count << " : " << car.getVIN() << " " << car.year << " " << car.make << " " << car.model << " " << car.mileage << " " << car.cityMPG << " " << car.highwayMPG << " " << car.getPurchasePrice() << " " << car.getCurrentValue() << '\n';
         count++;}
     }
-
-    
-
-    
 };
 
 void Fleet::GetCarDetails(std::string vin){
@@ -41,9 +67,10 @@ void Fleet::GetCarDetails(std::string vin){
         std::cout << "Car Does Exists With That VIN Number" << '\n';
 
     } else {
-        Car car = _fleet.at(vin);
+        Car& car = _fleet.at(vin);
 
         std::cout << car.year << " " << car.make << " " << car.model << '\n';
+        std::cout << "Current Mileage: " << car.mileage << '\n';
         std::cout << "City/Highway MPG: " << car.cityMPG << " / " << car.highwayMPG << '\n';
     }
 };
@@ -55,18 +82,21 @@ Car& Fleet::GetCarByVIN(std::string vin){
 
 void Fleet::GetFleetStats(){
     if(_fleet.size() == 0) {
-        std::cout << "There are currently no cars wihtin your fleet" << '\n';
+        std::cout << "There are currently no cars within your fleet" << '\n';
     } else {
-        int totalPurchase {0};
-        int totalCurrentVal {0};
-        int totalCityMPG {0};
-        int totalHighwayMPG {0};
+        
+        uint32_t totalPurchase {0};
+        uint32_t totalCurrentVal {0};
+        uint32_t totalMileage {0};
+        uint32_t totalCityMPG {0};
+        uint32_t totalHighwayMPG {0};
 
-        for(auto& car : _fleet) {
-            totalPurchase += stoi(car.second.getPurchasePrice());
-            totalCurrentVal += stoi(car.second.getCurrentValue());
-            totalCityMPG += stoi(car.second.cityMPG);
-            totalHighwayMPG += stoi(car.second.highwayMPG);
+        for(auto& [vin, car] : _fleet) {
+            totalPurchase += stoi(car.getPurchasePrice());
+            totalCurrentVal += stoi(car.getCurrentValue());
+            totalMileage += stoi(car.mileage);
+            totalCityMPG += stoi(car.cityMPG);
+            totalHighwayMPG += stoi(car.highwayMPG);
         }
 
         
@@ -78,10 +108,11 @@ void Fleet::GetFleetStats(){
 
         std::cout <<"Average Original Cost (Per Vehicle): $" << totalPurchase / _fleet.size() << "\n";
         std::cout <<"Average Current Value (Per Vehicle): $" << totalCurrentVal / _fleet.size() << "\n";
+        std::cout <<"Average Mileage (Per Vehicle): " << totalMileage / _fleet.size() << "\n";
         std::cout <<  std::fixed << std::setprecision(2)  <<"Average Loss (Per Vehicle): "<< totalReturn << "%" << '\n';
 
 
-        std::cout << "Average Fuel Economy (MPG): " << totalCityMPG / _fleet.size() << " / " << totalHighwayMPG / _fleet.size() <<'\n'; 
+        std::cout << "Average Fuel Economy (City/Highway MPG): " << totalCityMPG / _fleet.size() << " / " << totalHighwayMPG / _fleet.size() <<'\n'; 
     }
 
 
